@@ -15,7 +15,7 @@ fn main() {
     let mut gamma: u32 = 0;
 
     //Each line of the puzzle input has 12 bits, so we shift at max 11 to the left.
-    for i in 0..11 {
+    for i in 0..12 {
         let mut ones_surplus: i32 = 0;
         let target_bit: u32 = 1 << i;
         for value in values.iter() {
