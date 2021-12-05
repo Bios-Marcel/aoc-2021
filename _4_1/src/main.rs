@@ -145,35 +145,5 @@ fn is_winning_board(board: &[[Cell; 5]; 5]) -> bool {
         }
     }
 
-    //Diagonal, top-left to bottom-right
-    let mut top_left_to_bottom_right_win = true;
-    for index in 0..5 {
-        if !board[index][index].hit {
-            top_left_to_bottom_right_win = false;
-            break;
-        }
-    }
-
-    if top_left_to_bottom_right_win {
-        return true;
-    }
-
-    //Diagonal, bottom-left to top-right
-    let mut bottom_left_to_top_right = true;
-    let mut x = 0;
-    let mut y = 5;
-    loop {
-        y = y - 1;
-        if !board[y][x].hit {
-            bottom_left_to_top_right = false;
-            break;
-        }
-
-        if y == 0 {
-            break;
-        }
-        x = x + 1;
-    }
-
-    bottom_left_to_top_right
+    false
 }
