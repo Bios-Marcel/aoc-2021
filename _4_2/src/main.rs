@@ -28,11 +28,7 @@ fn main() {
         .split(',')
         .filter(|number| !number.is_empty())
         .map(|number| number.trim())
-        //FIXME How do i get this to compile without adding a block, since
-        //for_each expects a clojure that returns nothing.
-        .for_each(|number: &str| {
-            winning_numbers.push(number.parse::<u8>().unwrap());
-        });
+        .for_each(|number: &str| winning_numbers.push(number.parse::<u8>().unwrap()));
 
     let mut row = 0;
     let empty_cell = Cell { val: 0, hit: false };
@@ -41,9 +37,9 @@ fn main() {
 
     //Skip empty line after winning numbers.
     reader.read_line(&mut buffer).expect("empty line expected");
-
     //Initially clear, since read_line appends.
     buffer.clear();
+
     while reader.read_line(&mut buffer).unwrap() > 0 {
         //Each board is seperate with an empty line
         if buffer.is_empty() || row == 5 {
@@ -75,32 +71,33 @@ fn main() {
     let mut last_board_to_win: Option<[[Cell; 5]; 5]> = None;
     let mut last_winning_number: u8 = 0;
     for winning_number in winning_numbers {
-        let mut board_index: isize = -1;
-        while board_index + 1 < boards.len() as isize {
-            board_index = board_index + 1;
-            let board = &mut boards[board_index as usize];
-            'row_loop: for row_index in 0..5 {
+        let mut board_index = 0;
+        'board_loop: while board_index < boards.len() {
+            let board = &mut boards[board_index];
+            for row_index in 0..5 {
                 let row = &mut board[row_index];
                 for column_index in 0..5 {
                     let cell = &mut row[column_index];
                     if cell.val == winning_number {
                         cell.hit = true;
-                        if is_winning_board(&board) {
+                        if is_winning_board(board) {
                             last_board_to_win = Some(board.clone());
                             last_winning_number = winning_number;
 
-                            //FIXME We remove the board and subtract one from the index, since
-                            //simply skipping the the current board_iteration with continue
-                            //doesn't work because apparently I don't understand the borrowing in Rust.
+                            //This board is won, therefore we must not re-check.
                             boards.remove(board_index as usize);
-                            board_index = board_index - 1;
+                            //We continue without increasing the iterator, since we removed an element.
+                            continue 'board_loop;
                         }
 
-                        //Board done, next board. See Fixme above for why we don't just continue to the next board.
-                        break 'row_loop;
+                        board_index = board_index + 1;
+                        //Board done, since the number can only match once.
+                        continue 'board_loop;
                     }
                 }
             }
+
+            board_index = board_index + 1;
         }
     }
 
