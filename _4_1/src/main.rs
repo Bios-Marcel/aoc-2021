@@ -28,11 +28,7 @@ fn main() {
         .split(',')
         .filter(|number| !number.is_empty())
         .map(|number| number.trim())
-        //FIXME How do i get this to compile without adding a block, since
-        //for_each expects a clojure that returns nothing.
-        .for_each(|number: &str| {
-            winning_numbers.push(number.parse::<u8>().unwrap());
-        });
+        .for_each(|number: &str| winning_numbers.push(number.parse::<u8>().unwrap()));
 
     let mut row = 0;
     let empty_cell = Cell { val: 0, hit: false };
@@ -41,35 +37,32 @@ fn main() {
 
     //Skip empty line after winning numbers.
     reader.read_line(&mut buffer).expect("empty line expected");
-
     //Initially clear, since read_line appends.
     buffer.clear();
+
     while reader.read_line(&mut buffer).unwrap() > 0 {
         //Each board is seperate with an empty line
-        if buffer.is_empty() || row == 5 {
-            if row != 0 {
-                &boards.push(current_board);
-                current_board = [[empty_cell; 5]; 5];
-                row = 0;
-            }
+        if buffer.is_empty() {
             continue;
         }
 
         for (cell, element) in buffer.split_whitespace().enumerate() {
-            current_board[row][cell] = Cell {
-                val: element.parse::<u8>().unwrap(),
-                hit: false,
-            };
+            let board_cell = &mut current_board[row][cell];
+            board_cell.val = element.parse::<u8>().unwrap();
+            board_cell.hit = false;
         }
 
         //Clear, since read_line appends.
         buffer.clear();
-        row = row + 1;
-    }
 
-    //Last board gets lost otherwise, since the last line is EOF.
-    if row != 0 {
-        &boards.push(current_board);
+        //Board finished
+        if row == 4 {
+            &boards.push(current_board);
+            current_board = [[empty_cell; 5]; 5];
+            row = 0;
+        } else {
+            row = row + 1;
+        }
     }
 
     for winning_number in winning_numbers {
