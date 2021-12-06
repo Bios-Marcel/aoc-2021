@@ -18,10 +18,7 @@ fn main() {
     let mut co2_values = values.to_vec();
     filter_values(&mut co2_values, |ones_surplus| ones_surplus < 0);
 
-    println!(
-        "{}",
-        oxygen_values.get(0).unwrap() * co2_values.get(0).unwrap()
-    );
+    println!("{}", oxygen_values[0] * co2_values[0]);
 }
 
 fn filter_values(values: &mut Vec<u32>, keep_set_bits_fn: fn(i32) -> bool) {
@@ -45,7 +42,7 @@ fn filter_values(values: &mut Vec<u32>, keep_set_bits_fn: fn(i32) -> bool) {
         let keep_set_bits = keep_set_bits_fn(ones_surplus);
         let mut i = 0;
         while i < values.len() {
-            let bit_set = values.get(i).unwrap() & target_bit == target_bit;
+            let bit_set = values[i] & target_bit == target_bit;
             if bit_set != keep_set_bits {
                 values.swap_remove(i);
                 //Reaccess index, since we removed the current element and the
