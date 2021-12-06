@@ -42,30 +42,27 @@ fn main() {
 
     while reader.read_line(&mut buffer).unwrap() > 0 {
         //Each board is seperate with an empty line
-        if buffer.is_empty() || row == 5 {
-            if row != 0 {
-                &boards.push(current_board);
-                current_board = [[empty_cell; 5]; 5];
-                row = 0;
-            }
+        if buffer.is_empty() {
             continue;
         }
 
         for (cell, element) in buffer.split_whitespace().enumerate() {
-            current_board[row][cell] = Cell {
-                val: element.parse::<u8>().unwrap(),
-                hit: false,
-            };
+            let &mut board_cell = &mut current_board[row][cell];
+            board_cell.val = element.parse::<u8>().unwrap();
+            board_cell.hit = false;
         }
 
         //Clear, since read_line appends.
         buffer.clear();
-        row = row + 1;
-    }
 
-    //Last board gets lost otherwise, since the last line is EOF.
-    if row != 0 {
-        &boards.push(current_board);
+        //Board finished
+        if row == 4 {
+            &boards.push(current_board);
+            current_board = [[empty_cell; 5]; 5];
+            row = 0;
+        } else {
+            row = row + 1;
+        }
     }
 
     let mut last_board_to_win: Option<[[Cell; 5]; 5]> = None;
