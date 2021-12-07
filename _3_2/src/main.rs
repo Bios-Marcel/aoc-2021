@@ -2,9 +2,22 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
+    println!("{}", puzzle());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 5410338);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let reader = BufReader::new(file);
-
     let mut values: Vec<u32> = Vec::new();
     for (_, line) in reader.lines().enumerate() {
         let line = line.unwrap();
@@ -18,7 +31,7 @@ fn main() {
     let mut co2_values = values.to_vec();
     filter_values(&mut co2_values, |ones_surplus| ones_surplus < 0);
 
-    println!("{}", oxygen_values[0] * co2_values[0]);
+    return oxygen_values[0] * co2_values[0];
 }
 
 fn filter_values(values: &mut Vec<u32>, keep_set_bits_fn: fn(i32) -> bool) {
