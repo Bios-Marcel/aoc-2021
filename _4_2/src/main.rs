@@ -1,14 +1,21 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-//Required for array instantiation, since we copy the default value into each cell.
-#[derive(Clone, Copy)]
-struct Cell {
-    val: u8,
-    hit: bool,
+fn main() {
+    println!("{}", puzzle());
 }
 
-fn main() {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 34726);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let mut reader = BufReader::new(file);
     let mut buffer = String::new();
@@ -90,10 +97,7 @@ fn main() {
         }
     }
 
-    println!(
-        "{}",
-        count_score(&last_board_to_win.unwrap(), last_winning_number)
-    );
+    count_score(&last_board_to_win.unwrap(), last_winning_number)
 }
 
 fn count_score(board: &[[Cell; 5]; 5], winning_number: u8) -> u32 {
@@ -146,4 +150,11 @@ fn is_winning_board(board: &[[Cell; 5]; 5]) -> bool {
     }
 
     false
+}
+
+//Required for array instantiation, since we copy the default value into each cell.
+#[derive(Clone, Copy)]
+struct Cell {
+    val: u8,
+    hit: bool,
 }
