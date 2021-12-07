@@ -1,4 +1,3 @@
-use std::fmt::{Display, Formatter, Result};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -7,12 +6,6 @@ use std::io::{BufRead, BufReader};
 struct Cell {
     val: u8,
     hit: bool,
-}
-
-impl Display for Cell {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{}", self.val)
-    }
 }
 
 fn main() {
@@ -47,9 +40,8 @@ fn main() {
         }
 
         for (cell, element) in buffer.split_whitespace().enumerate() {
-            let &mut board_cell = &mut current_board[row][cell];
-            board_cell.val = element.parse::<u8>().unwrap();
-            board_cell.hit = false;
+            current_board[row][cell].val = element.parse::<u8>().unwrap();
+            current_board[row][cell].hit = false;
         }
 
         //Clear, since read_line appends.
@@ -57,7 +49,7 @@ fn main() {
 
         //Board finished
         if row == 4 {
-            &boards.push(current_board);
+            let _ = &boards.push(current_board);
             current_board = [[empty_cell; 5]; 5];
             row = 0;
         } else {
