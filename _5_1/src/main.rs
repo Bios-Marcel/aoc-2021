@@ -2,34 +2,21 @@ use std::cmp::{max, min};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-//"x1,y1 -> x2->y1" -> (x1,y1,x2,y2)
-fn parse_line(text: String) -> (usize, usize, usize, usize) {
-    let coords: Vec<Vec<usize>> = text
-        .split(" -> ")
-        .map(|coordinate_pair| {
-            coordinate_pair
-                .split(',')
-                .map(|coordinate| coordinate.parse::<usize>().unwrap())
-                .collect()
-        })
-        .collect();
-    return (coords[0][0], coords[0][1], coords[1][0], coords[1][1]);
-}
-
-fn increment_cell(matrix: &mut Vec<Vec<u8>>, x: usize, y: usize) {
-    if matrix.len() <= y {
-        matrix.resize_with(y + 1, || Vec::new());
-    }
-
-    let row = &mut matrix[y];
-    if row.len() <= x {
-        row.resize(x + 1, 0);
-    }
-
-    row[x] = row[x] + 1;
-}
-
 fn main() {
+    println!("{}", puzzle());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 5169);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let reader = BufReader::new(file);
     let mut matrix: Vec<Vec<u8>> = Vec::new();
@@ -61,5 +48,32 @@ fn main() {
         }
     }
 
-    println!("{}", overlapping_count);
+    return overlapping_count;
+}
+
+//"x1,y1 -> x2->y1" -> (x1,y1,x2,y2)
+fn parse_line(text: String) -> (usize, usize, usize, usize) {
+    let coords: Vec<Vec<usize>> = text
+        .split(" -> ")
+        .map(|coordinate_pair| {
+            coordinate_pair
+                .split(',')
+                .map(|coordinate| coordinate.parse::<usize>().unwrap())
+                .collect()
+        })
+        .collect();
+    return (coords[0][0], coords[0][1], coords[1][0], coords[1][1]);
+}
+
+fn increment_cell(matrix: &mut Vec<Vec<u8>>, x: usize, y: usize) {
+    if matrix.len() <= y {
+        matrix.resize_with(y + 1, || Vec::new());
+    }
+
+    let row = &mut matrix[y];
+    if row.len() <= x {
+        row.resize(x + 1, 0);
+    }
+
+    row[x] = row[x] + 1;
 }
