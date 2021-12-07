@@ -2,6 +2,20 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
+    println!("{}", puzzle());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 3429254);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let reader = BufReader::new(file);
 
@@ -38,5 +52,5 @@ fn main() {
     //epsilon is gamma flipped and gamma*epsilon is power.
     //Since we have more than the amount of bits used by the
     //puzzle (12), we flip all the bits and only take the first 12.
-    println!("{}", gamma * (!gamma & 0b1111_1111_1111));
+    return gamma * (!gamma & 0b1111_1111_1111);
 }
