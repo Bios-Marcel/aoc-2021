@@ -3,6 +3,20 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
+    println!("{}", puzzle());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 1739);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let reader = BufReader::new(file);
 
@@ -28,5 +42,5 @@ fn main() {
         }
     }
 
-    println!("{}", increase_count);
+    return increase_count;
 }
