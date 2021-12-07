@@ -2,6 +2,20 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
+    println!("{}", puzzle());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 1340836560);
+    }
+}
+
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let reader = BufReader::new(file);
 
@@ -16,12 +30,12 @@ fn main() {
             "forward" => {
                 horizontal_pos = horizontal_pos + amount;
                 depth = depth + aim * amount;
-            },
+            }
             "up" => aim = aim - amount,
             "down" => aim = aim + amount,
             _ => panic!(),
         }
     }
 
-    println!("{}", depth * horizontal_pos);
+    return depth * horizontal_pos;
 }
