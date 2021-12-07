@@ -2,20 +2,21 @@ use std::fmt::{Display, Formatter, Result};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-//Required for array instantiation, since we copy the default value into each cell.
-#[derive(Clone, Copy)]
-struct Cell {
-    val: u8,
-    hit: bool,
+fn main() {
+    println!("{}", puzzle());
 }
 
-impl Display for Cell {
-    fn fmt(&self, f: &mut Formatter) -> Result {
-        write!(f, "{}", self.val)
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(puzzle(), 71708);
     }
 }
 
-fn main() {
+fn puzzle() -> u32 {
     let file = File::open("input").unwrap();
     let mut reader = BufReader::new(file);
     let mut buffer = String::new();
@@ -57,7 +58,7 @@ fn main() {
 
         //Board finished
         if row == 4 {
-            &boards.push(current_board);
+            let _ = &boards.push(current_board);
             current_board = [[empty_cell; 5]; 5];
             row = 0;
         } else {
@@ -75,9 +76,8 @@ fn main() {
                     if cell.val == winning_number {
                         cell.hit = true;
                         if is_winning_board(&board) {
-                            println!("{}", count_score(&board, winning_number));
                             //Got our board, therefore we stop program exectution.
-                            return;
+                            return count_score(&board, winning_number);
                         }
 
                         //A board can only contain a number once.
@@ -87,6 +87,8 @@ fn main() {
             }
         }
     }
+
+    panic!("no result")
 }
 
 fn count_score(board: &[[Cell; 5]; 5], winning_number: u8) -> u32 {
@@ -139,4 +141,17 @@ fn is_winning_board(board: &[[Cell; 5]; 5]) -> bool {
     }
 
     false
+}
+
+//Required for array instantiation, since we copy the default value into each cell.
+#[derive(Clone, Copy)]
+struct Cell {
+    val: u8,
+    hit: bool,
+}
+
+impl Display for Cell {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        write!(f, "{}", self.val)
+    }
 }
