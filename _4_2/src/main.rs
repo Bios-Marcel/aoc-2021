@@ -42,7 +42,7 @@ fn puzzle() -> u32 {
 
     while reader.read_line(&mut buffer).unwrap() > 0 {
         //Each board is seperate with an empty line
-        if buffer.is_empty() {
+        if buffer.trim().is_empty() {
             continue;
         }
 
